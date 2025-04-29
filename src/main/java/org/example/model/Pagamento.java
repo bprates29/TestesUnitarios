@@ -36,4 +36,14 @@ public class Pagamento {
     public FormaPagamento getFormaPagamento() {
         return formaPagamento;
     }
-} 
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Pagamento) {
+            return this.valor == ((Pagamento) obj).valor &&
+                    this.formaPagamento.equals(((Pagamento) obj).formaPagamento);
+        } else {
+            return false;
+        }
+    }
+}
