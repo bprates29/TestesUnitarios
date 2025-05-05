@@ -2,9 +2,10 @@ package org.example.model;
 
 import org.example.enums.FormaPagamento;
 import org.example.enums.StatusPedido;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -29,6 +30,10 @@ class PedidoTest {
         item = new ItemPedido(produto, 2);
     }
 
+    //nomeDoMetodo_quando_parara_entao_parara
+    //nomeDoMetodo_when_parara_should_parara
+    //testeLogin() - login_Quando_senha_invalida_Entao_falha()
+
     @Test
     void deveRealizarPagamentoComSucesso() {
         pedido.adicionarItem(item);
@@ -42,6 +47,28 @@ class PedidoTest {
         assertTrue(ChronoUnit.SECONDS.between(pedido.getDataAtualizacao(), LocalDateTime.now()) <= 2);
     }
 
+    //objetivo: void realizarPagamento_quandoPedidoCriado_entaoDeveConfirmarPagamentoEAprovar
+    //behavior drive: void dadoPedidoCriado_quandoPagamentoRealizado_entaoStatusDeveSerEmPreparacao
+    //simples e direto: pagamentoPedidoDeveMudarStatusParaEmPreparacaoEPedidoAprovado
+
+    @Test
+    void deveLancarExcecaoAoPagarPedidoJaPago() {
+        pedido.adicionarItem(item);
+        pedido.definirEnderecoEntrega(endereco);
+
+        pedido.realizarPagamento(FormaPagamento.CARTAO_CREDITO);
+
+        Exception exception = assertThrows(IllegalStateException.class,
+                () -> {
+                    pedido.realizarPagamento(FormaPagamento.PIX);
+                });
+
+        var expectedMessage = "Não é possível realizar pagamento para um pedido com status: " + pedido.getStatus();
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    // realizarPagamento_quandoPedidoJaPago_entaoDeveLancarExcecao
+
     @Test
     void deveFinalizarPedidoComSucesso() {
         pedido.adicionarItem(item);
@@ -53,6 +80,22 @@ class PedidoTest {
         assertEquals(StatusPedido.ENTREGUE, pedido.getStatus());
     }
 
+    // finalizar_quandoStatusEnviado_entaoDeveMudarParaEntregue
+
+    @ParameterizedTest
+    @EnumSource(value = StatusPedido.class, names = { "ENVIADO" }, mode = EnumSource.Mode.EXCLUDE)
+    void deveLancarExcecaoAoFinalizarPedidoNaoEnviado(StatusPedido status) {
+        pedido.adicionarItem(item);
+        pedido.definirEnderecoEntrega(endereco);
+        pedido.atualizarStatus(status);
+
+        Exception exception = assertThrows(IllegalStateException.class,
+                () -> pedido.finalizar());
+
+        var expectedMessage = "Não é possível finalizar um pedido que não foi enviado";
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
     @Test
     void deveCancelarPedidoComSucesso() {
         pedido.adicionarItem(item);
@@ -62,4 +105,20 @@ class PedidoTest {
         assertEquals(StatusPedido.CANCELADO, pedido.getStatus());
     }
 
+    // cancelar_quandoPedidoCriado_entaoStatusDeveSerCancelado
+    // behavior driven: dadoPedidoCriado_quandoCancelar_entaoDeveSerCancelado
+
+//    @ParameterizedTest
+//    @EnumSource(value = StatusPedido.class, names = { "CRIADO", "AGUARDANDO_PAGAMENTO" }, mode = EnumSource.Mode.EXCLUDE)
+    @Test
+    void deveLancarExcecaoAoCancelarPedidoDiferenteDosQuePermitemCancelamento() {
+        pedido.adicionarItem(item);
+        pedido.atualizarStatus(StatusPedido.EM_PREPARACAO);
+
+        var exception = assertThrows(IllegalStateException.class,
+                () -> pedido.cancelar());
+
+        var expectedMessage = "Não é possível cancelar um pedido com status: " + pedido.getStatus();
+        assertEquals(expectedMessage, exception.getMessage());
+    }
 }
