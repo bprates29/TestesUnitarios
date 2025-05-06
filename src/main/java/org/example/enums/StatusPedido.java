@@ -7,7 +7,8 @@ public enum StatusPedido {
     EM_PREPARACAO,
     ENVIADO,
     ENTREGUE,
-    CANCELADO;
+    CANCELADO,
+    ALEATORIO;
     
     public boolean permiteAlteracao() {
         return this == CRIADO || this == AGUARDANDO_PAGAMENTO;
