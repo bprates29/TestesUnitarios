@@ -134,4 +134,8 @@ public class Pedido {
     public Cliente getCliente() {
         return cliente;
     }
-} 
+
+    public void setDataAtualizacao(LocalDateTime now) {
+        this.dataAtualizacao = now;
+    }
+}

@@ -9,9 +9,9 @@ public class ItemPedido {
             throw new IllegalArgumentException("Quantidade deve ser maior que zero");
         }
         
-        if (!produto.temEstoque(quantidade)) {
-            throw new IllegalArgumentException("Produto sem estoque suficiente");
-        }
+//        if (!produto.temEstoque(quantidade)) {
+//            throw new IllegalArgumentException("Produto sem estoque suficiente");
+//        }
         
         this.produto = produto;
         this.quantidade = quantidade;
