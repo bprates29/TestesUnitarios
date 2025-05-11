@@ -12,6 +12,7 @@ public class ExemploFluxoCompra {
         Produto calca = new Produto("Calça Jeans", "Calça jeans slim", 120.0, 5, "Vestuário");
         Produto tenis = new Produto("Tênis", "Tênis esportivo", 200.0, 3, "Calçados");
 
+
         // Criando cliente
         Cliente cliente = new Cliente("João Silva", "joao@email.com", "11987654321", true);
 
