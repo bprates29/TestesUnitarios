@@ -3,7 +3,7 @@ package org.example;
 import org.example.enums.FormaPagamento;
 import org.example.model.*;
 import org.example.utils.builders.PedidoBuilder;
-import org.example.utils.fixures.ClienteFixures;
+import org.example.utils.fixures.ClienteFixtures;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -66,7 +66,7 @@ public class TestFixtureTecnicas {
     @Test
     @DisplayName("Teste usando Object Mother Pattern")
     void testCarrinhoComObjectMother() {
-        var cliente2 = ClienteFixures.criarClientePadrao();
+        var cliente2 = ClienteFixtures.criarClientePadrao();
         CarrinhoCompras novoCarrinho = new CarrinhoCompras(cliente2);
         var expectedTotal = 200.0;
 

@@ -2,6 +2,11 @@ package org.example.model;
 
 import org.example.enums.FormaPagamento;
 import org.example.enums.StatusPedido;
+import org.example.utils.asserts.PedidoAssertions;
+import org.example.utils.builders.PedidoBuilder;
+import org.example.utils.builders.ProdutoBuilder;
+import org.example.utils.fixures.ClienteFixtures;
+import org.example.utils.fixures.ProdutoFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -120,5 +125,33 @@ class PedidoTest {
 
         var expectedMessage = "Não é possível cancelar um pedido com status: " + pedido.getStatus();
         assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    void deveCalcularTotal() {
+        Cliente cliente = new Cliente("teste nome", true);
+
+        Produto camiseta = new Produto("Camiseta", 50.0, 100);
+        Produto tenis = new Produto("Tenis", 500.0, 50);
+
+        Endereco endereco = new Endereco("Rua das flores", "123", "asdasd", "Centro", "PoA", "RJ", "3123123");
+
+        Pedido pedido = new Pedido(cliente);
+        pedido.definirEnderecoEntrega(endereco);
+        pedido.adicionarItem(new ItemPedido(camiseta, 2));
+        pedido.adicionarItem(new ItemPedido(tenis, 1));
+
+        assertEquals(600.0, pedido.getTotal());
+    }
+
+    @Test
+    void deveCalcularTotalWithHelpers() {
+        Pedido pedido = new PedidoBuilder()
+                .comCliente(ClienteFixtures.criarClientePadrao())
+                .comItem(ProdutoFixture.camisetaBarata(), 2)
+                .comItem(new ProdutoBuilder().comNome("Tenis").comPreco(500.0).build(), 1)
+                .build();
+
+        PedidoAssertions.assertPedido(pedido, StatusPedido.EM_PREPARACAO, 600.0);
     }
 }
