@@ -3,7 +3,7 @@ package org.example;
 import org.example.enums.FormaPagamento;
 import org.example.model.*;
 import org.example.utils.builders.PedidoBuilder;
-import org.example.utils.fixures.ClienteFixures;
+import org.example.utils.fixures.ClienteFixtures;
 import org.junit.jupiter.api.*;
 
 public class TestFixtureTecnicas {
@@ -88,7 +88,7 @@ public class TestFixtureTecnicas {
     @DisplayName("Teste usando Object Mother Pattern")
     void testCarrinhoProdutosComObjectMother() {
         //Arrange
-        Cliente clientePadrao = ClienteFixures.criarClientePadrao();
+        Cliente clientePadrao = ClienteFixtures.criarClientePadrao();
         CarrinhoCompras novoCarrinho = new CarrinhoCompras(clientePadrao);
 
         Produto tenis = criarProduto("Tenis", 250.0, 10);
